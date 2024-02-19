@@ -1,0 +1,45 @@
+spring:
+  application:
+    name: data-hub
+  elasticsearch:
+    rest:
+      uris: 114.116.35.31:9200
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://114.116.35.31:3307/w08e-data-hub?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull
+    username: root
+    password: 1+1=caibudao.O
+
+  redis:
+    host: 114.116.35.31
+    port: 6379
+    database: 10
+  jackson:
+    # ?????
+    date-format: yyyy-MM-dd HH:mm:ss
+    serialization:
+      # ?????
+      indent_output: false
+      # ?????????
+      fail_on_empty_beans: false
+    deserialization:
+      # ??????json???????
+      fail_on_unknown_properties: false
+
+
+server:
+  port: 8088
+#sa-token:
+#  token-name: satoken
+#  timeout: 2592000
+#  active-timeout: -1
+#  is-concurrent: true
+#  is-share: true
+#  token-style: uuid
+#  is-log: true
+
+
+logging:
+  level:
+    org.springframework.web.servlet.DispatcherServlet: DEBUG
