@@ -3,9 +3,9 @@ package com.w08e.data.pub.controller;
 
 import com.w08e.data.pub.dto.BankDto;
 import com.w08e.data.pub.service.BankService;
+import com.w08e.data.pub.util.Result;
 import com.w08e.data.pub.vo.BankVo;
 import com.w08e.data.pub.vo.QueryResult;
-import com.w08e.data.pub.util.Result;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;

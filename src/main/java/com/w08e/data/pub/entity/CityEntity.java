@@ -23,6 +23,7 @@ public class CityEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
+	@Field(type= FieldType.Keyword)
 	private Integer id;
 
 	@TableField(value = "code")
