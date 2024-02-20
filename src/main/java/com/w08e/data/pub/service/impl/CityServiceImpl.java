@@ -1,5 +1,6 @@
 package com.w08e.data.pub.service.impl;
 
+import ch.qos.logback.classic.spi.EventArgUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -16,11 +17,15 @@ import com.w08e.data.pub.vo.QueryResult;
 import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
+import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
+import org.springframework.data.elasticsearch.core.query.Criteria;
+import org.springframework.data.elasticsearch.core.query.CriteriaQuery;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -33,8 +38,11 @@ import java.util.List;
 
 public class CityServiceImpl extends ServiceImpl<CityMapper, CityEntity> implements CityService {
 
-    @Autowired
+    @Resource
     private CityEsRepository cityEsRepository;
+
+    @Resource
+    private ElasticsearchTemplate elasticsearchTemplate;
 
     @Override
     public QueryResult<CityVo> list(CityFilterDto filter) {
@@ -44,32 +52,20 @@ public class CityServiceImpl extends ServiceImpl<CityMapper, CityEntity> impleme
 
     public QueryResult<CityVo> listEs(CityFilterDto filter) {
 
-        NativeSearchQueryBuilder nativeSearchQueryBuilder = new NativeSearchQueryBuilder();
-        BoolQueryBuilder builder = QueryBuilders.boolQuery();
-        if (CollectionUtil.isNotEmpty(filter.getCode())) {
-            builder.must(QueryBuilders.termsQuery("code", filter.getCode()));
-        }
-        if (CollectionUtil.isNotEmpty(filter.getParentCode())) {
-            builder.must(QueryBuilders.termsQuery("parentCode", filter.getParentCode()));
-        }
-        if (filter.getMaxDeep() != null) {
-            builder.must(QueryBuilders.rangeQuery("deep").lte(filter.getMaxDeep()));
-        }
-        if (ObjectUtil.isNotEmpty(filter.getKeywords())) {
-            builder.must(QueryBuilders.wildcardQuery("name", "*" + filter.getKeywords() + "*"));
-        }
-        nativeSearchQueryBuilder.withQuery(builder);
-
-        Page<CityEntity> cities = cityEsRepository.search(nativeSearchQueryBuilder.build());
-
-        return PageConvert.toQueryResult(cities.getContent(), cities.getTotalElements(), this::transform);
+        CriteriaQuery query = new CriteriaQuery(new Criteria())
+                .addCriteria(new Criteria("deep").lessThanEqual(filter.getMaxDeep()))
+                .addCriteria(new Criteria("name").contains(filter.getKeywords()))
+                .addCriteria(new Criteria("code").in(filter.getCode()))
+                .addCriteria(new Criteria("parentCode").in(filter.getParentCode()));
+        Page<CityEntity> cityEntities = elasticsearchTemplate.queryForPage(query, CityEntity.class);
+        return PageConvert.toQueryResult(cityEntities.getContent(), cityEntities.getTotalElements(), this::transform);
     }
 
     @Override
     public List<CityTreeVo> tree(List<Integer> topCode, Integer maxDeep) {
         List<CityTreeVo> result = new ArrayList<>();
 
-        QueryWrapper<CityEntity> queryWrapper = new QueryWrapper();
+        QueryWrapper<CityEntity> queryWrapper = new QueryWrapper<>();
         if (maxDeep != null) {
             queryWrapper.lambda().le(CityEntity::getLevel, maxDeep);
         }
@@ -124,6 +120,7 @@ public class CityServiceImpl extends ServiceImpl<CityMapper, CityEntity> impleme
     @Override
     public List<CityTreeVo> treeEs(List<Integer> topCode, Integer maxDeep) {
         List<CityTreeVo> result = new ArrayList<>();
+
 
         NativeSearchQueryBuilder builder = new NativeSearchQueryBuilder();
         if (maxDeep != null) {
