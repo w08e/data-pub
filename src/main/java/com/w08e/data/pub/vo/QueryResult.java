@@ -1,7 +1,15 @@
 package com.w08e.data.pub.vo;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.List;
 
+/**
+ * @author W08E
+ */
+@Setter
+@Getter
 public class QueryResult<T> {
 
     public static <T> QueryResult<T> of(List<T> data) {
@@ -28,19 +36,4 @@ public class QueryResult<T> {
     public QueryResult() {
     }
 
-    public Long getTotal() {
-        return total;
-    }
-
-    public void setTotal(Long total) {
-        this.total = total;
-    }
-
-    public List<T> getRecords() {
-        return records;
-    }
-
-    public void setRecords(List<T> records) {
-        this.records = records;
-    }
 }

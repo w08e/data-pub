@@ -1,7 +1,16 @@
 package com.w08e.data.pub.dto;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.List;
 
+/**
+ *  查询参数
+ * @author W08E
+ */
+@Setter
+@Getter
 public class QueryParameter {
 
     /**
@@ -24,60 +33,15 @@ public class QueryParameter {
      */
     private List<Sort> sorts;
 
-    public Long getCurrent() {
-        return current;
-    }
 
-    public void setCurrent(Long current) {
-        this.current = current;
-    }
-
-    public Long getSize() {
-        return size;
-    }
-
-    public void setSize(Long size) {
-        this.size = size;
-    }
-
-    public boolean isWithTotal() {
-        return withTotal;
-    }
-
-    public void setWithTotal(boolean withTotal) {
-        this.withTotal = withTotal;
-    }
-
-    public List<Sort> getSorts() {
-        return sorts;
-    }
-
-    public void setSorts(List<Sort> sorts) {
-        this.sorts = sorts;
-    }
-
-
+    @Setter
+    @Getter
     public static class Sort {
 
         private String field;
 
         private Direction direction;
 
-        public String getField() {
-            return field;
-        }
-
-        public void setField(String field) {
-            this.field = field;
-        }
-
-        public Direction getDirection() {
-            return direction;
-        }
-
-        public void setDirection(Direction direction) {
-            this.direction = direction;
-        }
     }
 
 

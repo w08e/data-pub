@@ -13,6 +13,9 @@ import com.w08e.data.pub.vo.CityVo;
 import com.w08e.data.pub.vo.QueryResult;
 import org.apache.ibatis.annotations.Mapper;
 
+/**
+ * @author W08E
+ */
 @Mapper
 public interface CityMapper extends BaseMapper<CityEntity> {
     default QueryResult searchWrapperForList(CityFilterDto filter) {
