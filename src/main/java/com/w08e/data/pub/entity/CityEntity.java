@@ -4,12 +4,14 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.w08e.data.pub.vo.CityTreeVo;
 import lombok.Data;
+import org.joda.time.LocalDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 
 /**
@@ -50,6 +52,12 @@ public class CityEntity implements Serializable {
 
 	@Field(type=FieldType.Integer)
 	private Integer level;
+
+	@Field(type=FieldType.Keyword)
+	private LocalDateTime createTime;
+
+	@Field(type=FieldType.Keyword)
+	private LocalDateTime updateTime;
 
 	public CityTreeVo toTreeVo() {
 		CityTreeVo vo = new CityTreeVo();

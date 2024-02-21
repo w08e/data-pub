@@ -74,6 +74,14 @@ public class CityController {
         citySyncManager.asyncWrite(cityDto);
     }
 
+    /**
+     * 删除es数据
+     */
+    @PostMapping("/delete")
+    public void deleteEs() {
+        cityService.deleteEs();
+    }
+
 
     /**
      * 存量数据同步

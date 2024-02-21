@@ -19,4 +19,6 @@ public interface CityService extends IService<CityEntity> {
     public List<CityTreeVo> tree(List<Integer> topCode, Integer maxDeep);
 
     public List<CityTreeVo> treeEs(List<Integer> topCode, Integer maxDeep);
+
+    void deleteEs();
 }

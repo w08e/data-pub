@@ -189,6 +189,11 @@ public class CityServiceImpl extends ServiceImpl<CityMapper, CityEntity> impleme
         return result;
     }
 
+    @Override
+    public void deleteEs() {
+        cityEsRepository.deleteAll();
+    }
+
     public void syncCity2Es() {
         QueryWrapper<CityEntity> queryWrapper = new QueryWrapper();
         List<CityEntity> cities = baseMapper.selectList(queryWrapper);

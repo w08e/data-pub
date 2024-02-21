@@ -8,10 +8,13 @@ import com.w08e.data.pub.mapper.CityMapper;
 import com.w08e.data.pub.mq.publish.CityPublishEvent;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 
 /**
+ * es与数据库同步策略
+ *
  * @Author: 梦想成为超人的猪猪侠
  * @Date: 2024/2/20 09:36
  */
@@ -48,8 +51,9 @@ public class CitySyncManager {
     }
 
     /**
-     * 异步双写城市数据
+     * 异步双写mq 城市数据
      */
+    @Transactional(rollbackFor = Exception.class)
     public void asyncWrite(CityDto cityDto) {
         //省略校验逻辑....
         //数据库写入
@@ -61,4 +65,15 @@ public class CitySyncManager {
         cityPublishEvent.publishCityCreatedEvent(cityEntity);
     }
 
+    /**
+     * 异步双写定时任务 城市数据
+     * 实时性不高情况适用
+     * 不影响原业务逻辑
+     */
+    public void asyncWriteSchedule(CityDto cityDto) {
+        //定时扫表，用update_time字段判断是否需要同步
+        //增量数据导入es
+
+        //省略定时任务写入es逻辑....
+    }
 }
